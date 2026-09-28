@@ -1,0 +1,22 @@
+name: Update & Verify SSC Data Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      noticeNumber:
+        description: 'New Official Notification Reference'
+        required: false
+        default: 'Latest Verified Notice'
+
+jobs:
+  update-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: node scripts/validateData.cjs
+      - name: Log Verification Trigger
+        run: echo "Verified pipeline for notice ${{ github.event.inputs.noticeNumber }}"

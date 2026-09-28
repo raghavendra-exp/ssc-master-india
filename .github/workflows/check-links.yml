@@ -1,0 +1,25 @@
+name: Check Official Links & URLs
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday morning at 6 AM
+  workflow_dispatch:
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Verify Official SSC URLs
+        run: node -e "
+          const fs = require('fs');
+          const updates = JSON.parse(fs.readFileSync('public/data/notifications/updates.json', 'utf8'));
+          updates.forEach(u => {
+            if (!u.url.startsWith('https://')) throw new Error('Insecure or invalid URL: ' + u.url);
+          });
+          console.log('✅ All notification URLs verified.');
+        "

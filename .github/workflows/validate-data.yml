@@ -1,0 +1,24 @@
+name: Validate SSC Data Architecture
+
+on:
+  push:
+    paths:
+      - 'public/data/**'
+      - 'scripts/**'
+  pull_request:
+    paths:
+      - 'public/data/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Run Data Integrity Checks
+        run: node scripts/validateData.cjs
