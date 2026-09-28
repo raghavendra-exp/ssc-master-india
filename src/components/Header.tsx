@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Center: Search Bar Trigger */}
-        <div className="flex-1 max-w-md mx-2 hidden md:block">
+        <div className="flex-1 max-w-md mx-2 hidden lg:block">
           <button
             onClick={() => setSearchOpen(true)}
             className="w-full flex items-center justify-between px-3.5 py-2 text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl hover:border-blue-500 dark:hover:border-blue-400 hover:bg-white dark:hover:bg-slate-800 transition-all text-left shadow-2xs"
@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile search icon button */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
             aria-label="Search"
           >
             <Search className="w-5 h-5" />
