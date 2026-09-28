@@ -38,6 +38,7 @@ interface AppContextType {
   setLanguage: (lang: Language) => void;
   theme: 'light' | 'dark' | 'system';
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  toggleTheme: () => void;
   activeExam: ExamId;
   setActiveExam: (exam: ExamId) => void;
   searchOpen: boolean;
@@ -93,20 +94,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // 2. Theme state
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
     const saved = localStorage.getItem('ssc_theme');
-    return (saved === 'dark' || saved === 'light' || saved === 'system') ? saved : 'light';
+    if (saved === 'dark' || saved === 'light' || saved === 'system') return saved;
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
   });
 
-  useEffect(() => {
+  const applyThemeToDOM = (t: 'light' | 'dark' | 'system') => {
     const root = document.documentElement;
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    const isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (isDark) {
       root.classList.add('dark');
+      root.style.colorScheme = 'dark';
     } else {
       root.classList.remove('dark');
+      root.style.colorScheme = 'light';
     }
+  };
+
+  useEffect(() => {
+    applyThemeToDOM(theme);
     localStorage.setItem('ssc_theme', theme);
+
+    if (theme === 'system') {
+      const media = window.matchMedia('(prefers-color-scheme: dark)');
+      const listener = () => applyThemeToDOM('system');
+      media.addEventListener('change', listener);
+      return () => media.removeEventListener('change', listener);
+    }
   }, [theme]);
 
-  const setTheme = (t: 'light' | 'dark' | 'system') => setThemeState(t);
+  const setTheme = (t: 'light' | 'dark' | 'system') => {
+    setThemeState(t);
+  };
+
+  const toggleTheme = () => {
+    setThemeState(prev => {
+      const isDark = prev === 'dark' || (prev === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) || document.documentElement.classList.contains('dark');
+      const next = isDark ? 'light' : 'dark';
+      applyThemeToDOM(next);
+      return next;
+    });
+  };
 
   // 3. Active Exam
   const [activeExam, setActiveExam] = useState<ExamId>('cgl');
@@ -253,6 +283,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setLanguage,
         theme,
         setTheme,
+        toggleTheme,
         activeExam,
         setActiveExam,
         searchOpen,

@@ -12,6 +12,21 @@
     <meta property="og:description" content="Complete official syllabus, verified PYQs, CBT mock tests, post explorer, physical tracker, typing lab, bilingual preparation platform." />
     <meta property="og:type" content="website" />
     <link rel="manifest" href="./manifest.json" />
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('ssc_theme');
+          var isDark = saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
     <title>SSC MASTER INDIA — Complete SSC Exams Preparation & Information Platform</title>
   </head>
   <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-blue-600 selection:text-white min-h-screen">

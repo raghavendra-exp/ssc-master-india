@@ -27,7 +27,8 @@ export const Header: React.FC<HeaderProps> = ({
   mobileMenuOpen,
   setMobileMenuOpen
 }) => {
-  const { language, setLanguage, theme, setTheme, setSearchOpen, bookmarkedQuestionIds, errorNotebook } = useApp();
+  const { language, setLanguage, theme, toggleTheme, setSearchOpen, bookmarkedQuestionIds } = useApp();
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md transition-colors shadow-xs">
@@ -147,11 +148,12 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Theme Toggle Button */}
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title={language === 'hi' ? 'थीम बदलें' : 'Toggle Theme'}
+            onClick={toggleTheme}
+            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            title={language === 'hi' ? 'थीम बदलें (Dark / Light)' : 'Toggle Theme (Dark / Light)'}
+            aria-label="Toggle Theme"
           >
-            {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
+            {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
           </button>
         </div>
       </div>
